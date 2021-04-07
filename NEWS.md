@@ -3,4 +3,4 @@
 * Added cron.R and utils.R for function `r2cron()`
 * Added basic tests for `r2cron()`
 * Added package basics, NEWS, COC, license, README
-* Added GitHub Actions
+* Added GitHub Actions and badges
