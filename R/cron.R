@@ -68,7 +68,7 @@ r2cron <- function(minutes = "*", hours  = "*",
 
  # Copy the string to the user's clipboard if requested
  if (clip) {
-  clipr::write_clip(cron_string)
+  clipr::write_clip(cron_string, allow_non_interactive = TRUE)
   cat("Copied to clipboard\n")
  }
 

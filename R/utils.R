@@ -3,7 +3,7 @@
  range <-
   if (p == "minutes") {
    0L:59L
-  } else if (p== "hours") {
+  } else if (p == "hours") {
    0L:23L
   } else if (p == "days_month") {
    1L:31L
@@ -17,7 +17,7 @@
      is.numeric(x) & !all(x %in% range)) {
   stop(
    paste0(
-    "'", period, "' argument must be an asterisk or integers ",
+    "'", p, "' argument must be an asterisk or integers ",
     min(range), " to ", max(range))
   )
  }

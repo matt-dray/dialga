@@ -62,4 +62,11 @@ test_that("out-of-range values are warned", {
  expect_warning(r2cron(days_month = 31, months = 11, clip = FALSE))
  expect_warning(r2cron(days_month = 29, months = 1:2, clip = FALSE))
  expect_warning(r2cron(days_month = 31, months = c(1, 4), clip = FALSE))
- })
+})
+
+test_that("clipboard-copying is supported", {
+  msg <- "Copied to clipboard"
+  expect_output(r2cron(), msg)
+  expect_output(r2cron(clip = TRUE), msg)
+  expect_output(r2cron(minutes = 1, clip = TRUE), msg)
+})
