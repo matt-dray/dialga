@@ -1,15 +1,15 @@
-.stop <- function(x, period) {
+.stop <- function(x, p) {
 
  range <-
-  if (period == "minutes") {
+  if (p == "minutes") {
    0L:59L
-  } else if (period == "hours") {
+  } else if (p== "hours") {
    0L:23L
-  } else if (period == "days_month") {
+  } else if (p == "days_month") {
    1L:31L
-  } else if (period == "months") {
+  } else if (p == "months") {
    1L:12L
-  } else if (period == "days_week") {
+  } else if (p == "days_week") {
    0L:6L
   }
 
@@ -24,7 +24,7 @@
 
 }
 
-.as_cron <- function(x) {
+.as_cron <- function(x, p) {
 
  if (is.character(x) | (is.numeric(x) & length(x) == 1)) {
 
@@ -38,13 +38,19 @@
             length(x) > 1 &
             length(unique(diff(x))) == 1) {
 
-  if (length(x) == length(seq(x[1], 59, unique(diff(x))))) {
+   if (
+     p == "minutes" & length(x) == length(seq(x[1], 59, unique(diff(x)))) |
+     p == "hours" & length(x) == length(seq(x[1], 23, unique(diff(x)))) |
+     p == "days_month" & length(x) == length(seq(x[1], 31, unique(diff(x)))) |
+     p == "months" & length(x) == length(seq(x[1], 12, unique(diff(x)))) |
+     p == "days_week" & length(x) == length(seq(x[1], 6, unique(diff(x))))
+   ) {
 
-   paste0(x[1], "/", unique(diff(x)))
+     paste0(x[1], "/", unique(diff(x)))
 
-  } else {
+   } else {
 
-    paste0(x, collapse = ",")
+     paste0(x, collapse = ",")
 
   }
 

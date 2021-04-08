@@ -55,11 +55,11 @@ r2cron <- function(minutes = "*", hours  = "*",
  }
 
  # Convert each argument's R expression to equivalent cron expression
- cron_minutes <- .as_cron(minutes)
- cron_hours <- .as_cron(hours)
- cron_days_month <- .as_cron(days_month)
- cron_months <- .as_cron(months)
- cron_days_week <- .as_cron(days_week)
+ cron_minutes <- .as_cron(minutes, "minutes")
+ cron_hours <- .as_cron(hours, "hours")
+ cron_days_month <- .as_cron(days_month, "days_month")
+ cron_months <- .as_cron(months, "months")
+ cron_days_week <- .as_cron(days_week, "days_week")
 
  # Paste together cron expressions for each time period
  cron_string <- paste(
@@ -69,7 +69,7 @@ r2cron <- function(minutes = "*", hours  = "*",
  # Copy the string to the user's clipboard if requested
  if (clip) {
   clipr::write_clip(cron_string)
-  cat("Copied to clipboard:\n")
+  cat("Copied to clipboard\n")
  }
 
  # Return the full cron expression
