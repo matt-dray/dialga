@@ -2,7 +2,7 @@
 % Please edit documentation in R/cron.R
 \name{r2cron}
 \alias{r2cron}
-\title{Build A Cron String From R Expressions}
+\title{Build Cron Strings from R Expressions}
 \usage{
 r2cron(
   minutes = 0L:59L,

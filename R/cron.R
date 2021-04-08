@@ -1,4 +1,4 @@
-#' Build A Cron String From R Expressions
+#' Build Cron Strings from R Expressions
 #'
 #' Provide an R expression to each of the arguments, which are different time
 #' periods (minutes, hours, days of the month, months, days of the week), and

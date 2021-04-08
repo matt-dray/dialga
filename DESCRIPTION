@@ -11,7 +11,7 @@ Description: Provide R objects as inputs and get a standard cron expression in
     systems that are designed to help you schedule computer tasks. It's easy to
     forget the required esoteric structure, hence the existence of web services
     like <https://crontab.guru/> and this package. 
-Issues: https://github.com/matt-dray/dialga/issues
+Bugs: https://github.com/matt-dray/dialga/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
