@@ -31,6 +31,15 @@
 #'     discretion).
 #' @export
 #'
+#' @examples \dontrun{r2cron(
+#'     minutes = seq(0, 59, 20),
+#'     hours = 15:17,  # 24-hr clock
+#'     days_month = 1,
+#'     months = c(4, 10, 11),
+#'     days_week = c(1, 7),  # Sunday is '1'
+#'     clip = FALSE
+#'     )}
+#'
 r2cron <- function(minutes = 0L:59L, hours  = 0L:23L,
                    days_month  = 1L:31L, months = 1L:12L, days_week  = 1L:7L,
                    clip = TRUE) {
@@ -79,5 +88,83 @@ r2cron <- function(minutes = 0L:59L, hours  = 0L:23L,
 
  # Return the full cron expression
  return(cron_string)
+
+}
+
+#' Generate English Interpretation of Valid Cron Strings
+#'
+#' Demystify the meaning of a valid cron string by converting it to an
+#' equivalent sentence in English. Can take the output from \code{\link{r2cron}}
+#' for example. (Under development.)
+#'
+#' @param cron Character. A valid cron string composed of five cron expressions
+#'     separated by spaces).
+#'
+#' @return Character. An English sentence interpretation of the input cron
+#'     expression.
+#' @export
+#'
+#' @examples \dontrun{cron2eng("1,2,5 2-3 * 1/3 5")}
+#'
+cron2eng <- function(cron = "* * * * *") {
+
+  if (!is.character(cron) | length(strsplit(cron, " ")[[1]]) != 5) {
+    stop("Argument 'cron' must be a valid cron expression.")
+  }
+
+  # Immediate return for special input
+  if (cron == "* * * * *") {
+
+    "every minute"
+
+  } else {
+
+    # Split each time period to a list element
+    p_list <- as.list(strsplit(cron, " ")[[1]])
+
+    # Name elements with text to be used in output for that time period
+    names(p_list) <- c(
+      "minute(s)", "hour(s)", "day(s) of the month",
+      "month(s)", "day(s) of the week"
+    )
+
+    # Convert each time period's cron expression to English
+    for (period in names(p_list)) {
+
+      if (p_list[[period]] == "*") {
+
+        p_list[[period]] <- paste("every", period)
+
+      } else if (stringr::str_detect(p_list[[period]], "^\\d{1,2}$")) {
+
+        p_list[[period]] <- paste(period, p_list[[period]])
+
+      } else if (stringr::str_detect(p_list[[period]], "^\\d{1,2}-\\d{1,2}$")) {
+
+        n_split <- strsplit(p_list[[period]], "-")
+        p_list[[period]] <- paste(
+          period, n_split[[1]][1], "to", n_split[[1]][2]
+        )
+
+      } else if (stringr::str_detect(p_list[[period]], "\\d{1,2},")) {
+
+        n_spaced <- stringr::str_replace_all(p_list[[period]], ",", ", ")
+        p_list[[period]] <- paste(period, n_spaced)
+
+      } else if (stringr::str_detect(p_list[[period]], "\\d{1,2}/\\d{1,2}")) {
+
+        n_split <- strsplit(p_list[[period]], "/")
+        p_list[[period]] <- paste(
+          "every", n_split[[1]][2], period,
+          "starting from", period, n_split[[1]][1]
+        )
+
+      }
+
+    }
+
+    paste(p_list, collapse = "; ")
+
+  }
 
 }

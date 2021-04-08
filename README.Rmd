@@ -31,7 +31,7 @@ Under development. Just for fun. Bugs likely.
 
 ## Purpose
 
-{dialga} is an R package that (for now) helps you build standard [cron expressions](https://en.wikipedia.org/wiki/Cron#CRON_expression)---which are pretty esoteric---using friendly R syntax.
+{dialga} is an R package that helps you build and interpret standard [cron expressions](https://en.wikipedia.org/wiki/Cron#CRON_expression)---which are pretty esoteric---using friendly R syntax.
 
 This package is a product of [Pokémon](https://www.pokemon.com/uk/)-Driven Development (PDD). Dialga is [the 'temporal Pokémon'](https://bulbapedia.bulbagarden.net/wiki/Dialga_(Pok%C3%A9mon)).
 
@@ -47,33 +47,45 @@ library(dialga)
 
 ## Demonstration
 
-Below are some demos of the `r2cron()` function. Arguments are named for each time period in a cron string (minutes, hours, etc) and their inputs can be in the form of:
+There's currently two functions: `r2cron()` takes integer vectors as inputs to time-period arguments and spits out a cron string, and `cron2eng()` takes a valid cron string and prints it as an English sentence. See `?dialga::r2cron()` and `?dialga::cron2eng()` for further details.
 
-* single integer values, like `1`
-* consecutive-integer vectors, like `1:3`
-* irregularly-spaced integer vectors, like `c(1, 2, 4)`
-* regularly-spaced integer sequences, like `seq(3, 59, 15)` (useful for specifying sequences within the full time period, like 'every 15 minutes of the hour starting from minute 3' in this example)
+### Simple example
 
-See `?dialga::r2cron()` for further details.
+A simple example of `r2cron()`: how would you specify the 28th minute past 11PM every day?
 
-The function defaults to 'every minute':
+```{r r2cron-simple}
+x <- dialga::r2cron(
+  minutes = 28, 
+  hours = 23,
+  clip = FALSE
+)
 
-```{r r2cron-empty}
-dialga::r2cron()
+x
 ```
 
-By default, the output will be printed and copied to your clipboard, thanks to [the {clipr} package](https://github.com/mdlincoln/clipr). Turn off copying with the argument `clip = FALSE`.
+To confirm, we can pass that cron string into `cron2eng()`.
 
-Here's 'every 15 minutes starting from the beginning of every hour':
-
-```{r r2cron-15mins}
-dialga::r2cron(minutes = seq(0, 59, 15), clip = FALSE)
+```{r cron2eng-simple}
+dialga::cron2eng(x)
 ```
 
-A more complicated (i.e. contrived) request might be 'every 20 minutes from the zeroth minute of the hours 1500, 1600 and 1700, on the 1st day of April, October and November, plus every weekend':
+As you can see, this output is quite rudimentary for now.
+
+You could pipe these functions together to go from R to English.
+
+```{r simple-pipe, message=FALSE}
+library(magrittr)  # for %>%
+
+dialga::r2cron(minutes = 28, hours = 23, clip = FALSE) %>% 
+  dialga::cron2eng()
+```
+
+### Complex example
+
+A more complicated (i.e. contrived) request might be 'every 20 minutes from the zeroth minute of 3PM, 4PM and 5PM, on the 1st days of April, October and November, plus every weekend':
 
 ```{r r2cron-complex}
-dialga::r2cron(
+y <- dialga::r2cron(
  minutes = seq(0, 59, 20),
  hours = 15:17,  # 24-hr clock
  days_month = 1,
@@ -81,7 +93,17 @@ dialga::r2cron(
  days_week = c(1, 7),  # Sunday is '1'
  clip = FALSE
 )
+
+y
 ```
+
+And to convert that to a sentence:
+
+```{r cron2eng-complex}
+dialga::cron2eng(y)
+```
+
+### Bonus warnings
 
 As a courtesy, you'll be warned when unlikely dates arise:
 

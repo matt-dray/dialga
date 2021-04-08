@@ -1,3 +1,7 @@
+# dialga 0.0.0.9002
+
+* Add basic `cron2eng()` function (#5)
+
 # dialga 0.0.0.9001
 
 * `x/y` output format now interpreted for all time period arguments (#1)

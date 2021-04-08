@@ -4,13 +4,20 @@
 \name{dialga-package}
 \alias{dialga}
 \alias{dialga-package}
-\title{dialga: Build Cron Strings From R Expressions}
+\title{dialga: Build and Interpret Cron Strings with R}
 \description{
-Provide R objects as inputs and get a standard cron expression in
+Provide R expressions as inputs and get a standard cron string in
     return. These strings are in a special format that's recognised by various
     systems that are designed to help you schedule computer tasks. It's easy to
     forget the required esoteric structure, hence the existence of web services
     like <https://crontab.guru/> and this package.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item Report bugs at \url{https://github.com/matt-dray/dialga/issues}
+}
+
 }
 \author{
 \strong{Maintainer}: Matt Dray \email{mwdray@gmail.com}
