@@ -5,29 +5,27 @@
 \title{Build A Cron String From R Expressions}
 \usage{
 r2cron(
-  minutes = "*",
-  hours = "*",
-  days_month = "*",
-  months = "*",
-  days_week = "*",
+  minutes = 0L:59L,
+  hours = 0L:23L,
+  days_month = 1L:31L,
+  months = 1L:12L,
+  days_week = 1L:7L,
   clip = TRUE
 )
 }
 \arguments{
-\item{minutes}{Minutes past the hour, integers 0 to 59 inclusive or asterisk.}
+\item{minutes}{Minutes past the hour, integers 0 to 59 inclusive.}
 
-\item{hours}{Hours on a 24-hour clock, integers 0 to 23 inclusive or
-asterisk.}
+\item{hours}{Hours on a 24-hour clock, integers 0 to 23 inclusive.}
 
-\item{days_month}{Day number of the month, integers 1 to 31 inclusive or
-asterisk.}
+\item{days_month}{Day number of the month, integers 1 to 31 inclusive.}
 
-\item{months}{Month number, integers 1 to 12 inclusive or asterisk.}
+\item{months}{Month number, integers 1 to 12 inclusive.}
 
-\item{days_week}{Day of the week, integers 0 to 6 inclusive (zero-indexed
-starting with Sunday) or asterisk.}
+\item{days_week}{Day of the week, integers 1 to 7 inclusive (where Sunday is
+the first day of the week).}
 
-\item{clip}{Logical. Copy to clipboard?}
+\item{clip}{Logical. Copy output to clipboard?}
 }
 \value{
 A character string (copied to the clipboard at the user's
@@ -40,16 +38,17 @@ receive an equivalent cron-expression string in return. See 'arguments' for
 valid value ranges and 'details' for valid input formats.
 }
 \details{
-The following input formats are acceptable for all the time period
-arguments:
+The time-period arguments default to every unit within that time
+period, like 'every minute, of every hour, of every day of the month,
+etc'. The following input formats are acceptable inputs to all the time
+period arguments:
 \itemize{
-\item a single asterisk, like \code{"*"}, which is a placeholder character
-meaning 'all valid integer values for the given time period' (i.e.
-\code{minutes = "*"} means 'every minute')
-\item a single numeric value, like \code{1}
-\item an integer sequence with increments of 1, like \code{1:3}
-\item an integer vector, like \code{c(2, 3, 5)}
-\item an equally-spaced sequence of integers with specific start and end
-values, like \code{seq(0, 59, 5)}
+\item a single integer value, like \code{1}
+\item consecutive-integer vectors, like \code{1:3}
+\item irregularly-spaced integer vectors, like \code{c(2, 3, 5)}
+\item regularly-spaced integer sequences with specified start and end
+values, like \code{seq(3, 59, 15)} (useful for specifying sequences within
+the full time period,'every 15 minutes of the hour starting from minute 3',
+like in this example)
 }
 }

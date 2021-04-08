@@ -31,7 +31,7 @@ Under development. Just for fun. Bugs likely.
 
 ## Purpose
 
-{dialga} is an R package to help you build standard [cron expressions](https://en.wikipedia.org/wiki/Cron#CRON_expression) using R syntax. It might be developed to do other things in future.
+{dialga} is an R package that (for now) helps you build standard [cron expressions](https://en.wikipedia.org/wiki/Cron#CRON_expression)---which are pretty esoteric---using friendly R syntax.
 
 This package is a product of [Pokémon](https://www.pokemon.com/uk/)-Driven Development (PDD). Dialga is [the 'temporal Pokémon'](https://bulbapedia.bulbagarden.net/wiki/Dialga_(Pok%C3%A9mon)).
 
@@ -42,38 +42,48 @@ Install from GitHub with help from {remotes}:
 ```{r eval=FALSE}
 install.packages("remotes")  # if not already installed
 remotes::install_github("matt-dray/dialga")
+library(dialga)
 ```
 
-## Examples
+## Demonstration
 
-Here are some demos of the `r2cron()` function. By default, the output will be printed and copied to your clipboard. Turn off copying with the argument `clip = FALSE`.
+Below are some demos of the `r2cron()` function. Arguments are named for each time period in a cron string (minutes, hours, etc) and their inputs can be in the form of:
 
-Every minute:
+* single integer values, like `1`
+* consecutive-integer vectors, like `1:3`
+* irregularly-spaced integer vectors, like `c(1, 2, 4)`
+* regularly-spaced integer sequences, like `seq(3, 59, 15)` (useful for specifying sequences within the full time period, like 'every 15 minutes of the hour starting from minute 3' in this example)
+
+See `?dialga::r2cron()` for further details.
+
+The function defaults to 'every minute':
 
 ```{r r2cron-empty}
-dialga::r2cron(clip = FALSE)
+dialga::r2cron()
 ```
 
-Every 15 minutes starting from the beginning of every hour:
+By default, the output will be printed and copied to your clipboard, thanks to [the {clipr} package](https://github.com/mdlincoln/clipr). Turn off copying with the argument `clip = FALSE`.
+
+Here's 'every 15 minutes starting from the beginning of every hour':
 
 ```{r r2cron-15mins}
 dialga::r2cron(minutes = seq(0, 59, 15), clip = FALSE)
 ```
 
-Every 20 minutes from the the hours starting 1500, 1600 and 1700, on the 1st day of April, October and November, plus every weekend:
+A more complicated (i.e. contrived) request might be 'every 20 minutes from the zeroth minute of the hours 1500, 1600 and 1700, on the 1st day of April, October and November, plus every weekend':
 
 ```{r r2cron-complex}
 dialga::r2cron(
  minutes = seq(0, 59, 20),
- hours = 15:17,
+ hours = 15:17,  # 24-hr clock
  days_month = 1,
  months = c(4, 10, 11),
- days_week = c(0, 6),
+ days_week = c(1, 7),  # Sunday is '1'
  clip = FALSE
 )
 ```
 
-Warning for unlikeliness:
+As a courtesy, you'll be warned when unlikely dates arise:
 
 ```{r}
 dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE)
@@ -81,9 +91,7 @@ dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE)
 
 ## Actual scheduling tools
 
-If on Unix/Linux, you can use [the {cronR} package](https://github.com/bnosac/cronR) to schedule tasks from R. The Windows alternative is [the {taskscheduleR} package](https://github.com/bnosac/taskscheduleR). 
-
-I typically use the web service [crontab.guru](https://crontab.guru) to build cron expressions. It was helpful for checking {dialga}'s functionality.
+If on Unix/Linux, you can use [the {cronR} package](https://github.com/bnosac/cronR) to schedule tasks from R. The Windows alternative is [the {taskscheduleR} package](https://github.com/bnosac/taskscheduleR). I typically use the web service [crontab.guru](https://crontab.guru) to build cron expressions. It was helpful for checking {dialga}'s functionality.
 
 ## Code of Conduct
 

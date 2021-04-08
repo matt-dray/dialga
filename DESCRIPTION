@@ -1,16 +1,16 @@
 Package: dialga
-Title: Build Cron Expressions From R
-Version: 0.0.0.9000
+Title: Build Cron Strings From R Expressions
+Version: 0.0.0.9001
 Authors@R: 
     person(given = "Matt",
            family = "Dray",
            role = c("aut", "cre"),
            email = "mwdray@gmail.com")
 Description: Provide R objects as inputs and get a standard cron expression in
-    return. These strings have a special format recgonised by Unix/Linux systems
-    to help you schedule computer tasks. It's easy to forget the required
-    structure, hence the existence of web services like <https://crontab.guru/>
-    and this package. 
+    return. These strings are in a special format that's recognised by various
+    systems that are designed to help you schedule computer tasks. It's easy to
+    forget the required esoteric structure, hence the existence of web services
+    like <https://crontab.guru/> and this package. 
 Issues: https://github.com/matt-dray/dialga/issues
 License: MIT + file LICENSE
 Encoding: UTF-8

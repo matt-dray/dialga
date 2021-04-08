@@ -1,3 +1,9 @@
+# dialga 0.0.0.9001
+
+* `x/y` output format now interpreted for all time period arguments (#1)
+* Default inputs are now vectors rather than asterisk character (#2)
+* Days of the week no longer zero0indexed (#6)
+
 # dialga 0.0.0.9000
 
 * Added cron.R and utils.R for function `r2cron()`

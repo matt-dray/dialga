@@ -19,9 +19,9 @@ Under development. Just for fun. Bugs likely.
 
 ## Purpose
 
-{dialga} is an R package to help you build standard [cron
-expressions](https://en.wikipedia.org/wiki/Cron#CRON_expression) using R
-syntax. It might be developed to do other things in future.
+{dialga} is an R package that (for now) helps you build standard [cron
+expressions](https://en.wikipedia.org/wiki/Cron#CRON_expression)—which
+are pretty esoteric—using friendly R syntax.
 
 This package is a product of
 [Pokémon](https://www.pokemon.com/uk/)-Driven Development (PDD). Dialga
@@ -35,50 +35,69 @@ Install from GitHub with help from {remotes}:
 ``` r
 install.packages("remotes")  # if not already installed
 remotes::install_github("matt-dray/dialga")
+library(dialga)
 ```
 
-## Examples
+## Demonstration
 
-Here are some demos of the `r2cron()` function. By default, the output
-will be printed and copied to your clipboard. Turn off copying with the
-argument `clip = FALSE`.
+Below are some demos of the `r2cron()` function. Arguments are named for
+each time period in a cron string (minutes, hours, etc) and their inputs
+can be in the form of:
 
-Every minute:
+-   single integer values, like `1`
+-   consecutive-integer vectors, like `1:3`
+-   irregularly-spaced integer vectors, like `c(1, 2, 4)`
+-   regularly-spaced integer sequences, like `seq(3, 59, 15)` (useful
+    for specifying sequences within the full time period, like ‘every 15
+    minutes of the hour starting from minute 3’ in this example)
+
+See `?dialga::r2cron()` for further details.
+
+The function defaults to ‘every minute’:
 
 ``` r
-dialga::r2cron(clip = FALSE)
+dialga::r2cron()
+#> Copied to clipboard
 #> [1] "* * * * *"
 ```
 
-Every 15 minutes starting from the beginning of every hour:
+By default, the output will be printed and copied to your clipboard,
+thanks to [the {clipr} package](https://github.com/mdlincoln/clipr).
+Turn off copying with the argument `clip = FALSE`.
+
+Here’s ‘every 15 minutes starting from the beginning of every hour’:
 
 ``` r
 dialga::r2cron(minutes = seq(0, 59, 15), clip = FALSE)
 #> [1] "0/15 * * * *"
 ```
 
-Every 20 minutes from the the hours starting 1500, 1600 and 1700, on the
-1st day of April, October and November, plus every weekend:
+A more complicated (i.e. contrived) request might be ‘every 20 minutes
+from the zeroth minute of the hours 1500, 1600 and 1700, on the 1st day
+of April, October and November, plus every weekend’:
 
 ``` r
 dialga::r2cron(
  minutes = seq(0, 59, 20),
- hours = 15:17,
+ hours = 15:17,  # 24-hr clock
  days_month = 1,
  months = c(4, 10, 11),
- days_week = c(0, 6),
+ days_week = c(1, 7),  # Sunday is '1'
  clip = FALSE
 )
-#> [1] "0/20 15-17 1 4,10,11 0,6"
+#> [1] "0/20 15-17 1 4,10,11 0/6"
 ```
 
-Warning for unlikeliness:
+As a courtesy, you’ll be warned when unlikely dates arise:
 
 ``` r
 dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE)
-#> Warning in dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE): Sure? There's no 31st in Feb, Apr, Jun, Sept nor Nov.
-#> Warning in dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE): Sure? There's no 30th in Feb.
-#> Warning in dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE): Sure? 29 Feb is only in leap years.
+#> Warning in dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE): 
+#>   Sure? There's no 31st in Feb, Apr, Jun, Sept nor Nov.
+#> Warning in dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE): 
+#>   Sure? There's no 30th in Feb.
+#> Warning in dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE): 
+#>   Sure? 29 Feb is only in leap years.
 #> [1] "* * 28-31 2 *"
 ```
 
@@ -87,11 +106,9 @@ dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE)
 If on Unix/Linux, you can use [the {cronR}
 package](https://github.com/bnosac/cronR) to schedule tasks from R. The
 Windows alternative is [the {taskscheduleR}
-package](https://github.com/bnosac/taskscheduleR).
-
-I typically use the web service [crontab.guru](https://crontab.guru) to
-build cron expressions. It was helpful for checking {dialga}’s
-functionality.
+package](https://github.com/bnosac/taskscheduleR). I typically use the
+web service [crontab.guru](https://crontab.guru) to build cron
+expressions. It was helpful for checking {dialga}’s functionality.
 
 ## Code of Conduct
 
