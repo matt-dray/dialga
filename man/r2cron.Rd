@@ -45,7 +45,8 @@ period arguments:
 \itemize{
 \item a single integer value, like \code{1}
 \item consecutive-integer vectors, like \code{1:3}
-\item irregularly-spaced integer vectors, like \code{c(2, 3, 5)}
+\item nonconsecutive, irregularly-spaced integer vectors, like
+\code{c(2, 3, 5)}
 \item regularly-spaced integer sequences with specified start and end
 values, like \code{seq(3, 59, 15)} (useful for specifying sequences within
 the full time period,'every 15 minutes of the hour starting from minute 3',
@@ -53,13 +54,14 @@ like in this example)
 }
 }
 \examples{
-\dontrun{r2cron(
-    minutes = seq(0, 59, 20),
-    hours = 15:17,  # 24-hr clock
-    days_month = 1,
-    months = c(4, 10, 11),
-    days_week = c(1, 7),  # Sunday is '1'
-    clip = FALSE
-    )}
+\dontrun{
+r2cron(
+  minutes = seq(0, 59, 20),
+  hours = 15:17,  # 24-hr clock
+  days_month = 1,
+  months = c(4, 10, 11),
+  days_week = c(1, 7),  # Sunday is '1'
+  clip = FALSE
+)}
 
 }

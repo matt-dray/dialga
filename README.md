@@ -15,8 +15,6 @@ coverage](https://codecov.io/gh/matt-dray/dialga/branch/main/graph/badge.svg)](h
 [![CodeFactor](https://www.codefactor.io/repository/github/matt-dray/dialga/badge)](https://www.codefactor.io/repository/github/matt-dray/dialga)
 <!-- badges: end -->
 
-Under development. Just for fun. Bugs likely.
-
 ## Purpose
 
 {dialga} is an R package that helps you build and interpret standard
@@ -24,10 +22,12 @@ Under development. Just for fun. Bugs likely.
 expressions](https://en.wikipedia.org/wiki/Cron#CRON_expression)—which
 are pretty esoteric—using friendly R syntax.
 
+Under development. Just for fun. Bugs likely.
+
 This package is a product of
 [Pokémon](https://www.pokemon.com/uk/)-Driven Development (PDD). Dialga
 is [the ‘temporal
-Pokémon’](https://bulbapedia.bulbagarden.net/wiki/Dialga_(Pok%C3%A9mon)).
+Pokémon’](https://bulbapedia.bulbagarden.net/wiki/Dialga_\(Pok%C3%A9mon\)).
 
 ## Install
 
@@ -47,7 +47,7 @@ inputs to time-period arguments and spits out a cron string, and
 sentence. See `?dialga::r2cron()` and `?dialga::cron2eng()` for further
 details.
 
-### Simple example
+### Simple
 
 A simple example of `r2cron()`: how would you specify the 28th minute
 past 11PM every day?
@@ -55,7 +55,7 @@ past 11PM every day?
 ``` r
 x <- dialga::r2cron(
   minutes = 28, 
-  hours = 23,
+  hours = 23,  # 24-hour clock
   clip = FALSE
 )
 
@@ -63,14 +63,13 @@ x
 #> [1] "28 23 * * *"
 ```
 
-To confirm, we can pass that cron string into `cron2eng()`.
+To confirm, we can pass that cron string into `cron2eng()`. Note that
+output is rudimentary for now.
 
 ``` r
 dialga::cron2eng(x)
 #> [1] "minute(s) 28; hour(s) 23; every day(s) of the month; every month(s); every day(s) of the week"
 ```
-
-As you can see, this output is quite rudimentary for now.
 
 You could pipe these functions together to go from R to English.
 
@@ -82,7 +81,7 @@ dialga::r2cron(minutes = 28, hours = 23, clip = FALSE) %>%
 #> [1] "minute(s) 28; hour(s) 23; every day(s) of the month; every month(s); every day(s) of the week"
 ```
 
-### Complex example
+### Complex
 
 A more complicated (i.e. contrived) request might be ‘every 20 minutes
 from the zeroth minute of 3PM, 4PM and 5PM, on the 1st days of April,
@@ -99,17 +98,17 @@ y <- dialga::r2cron(
 )
 
 y
-#> [1] "0/20 15-17 1 4,10,11 0/6"
+#> [1] "0/20 15-17 1 4,10,11 0,6"
 ```
 
 And to convert that to a sentence:
 
 ``` r
 dialga::cron2eng(y)
-#> [1] "every 20 minute(s) starting from minute(s) 0; hour(s) 15 to 17; day(s) of the month 1; month(s) 4, 10, 11; every 6 day(s) of the week starting from day(s) of the week 0"
+#> [1] "every 20 minute(s) starting from minute(s) 0; hour(s) 15 to 17; day(s) of the month 1; month(s) 4, 10, 11; day(s) of the week 0, 6"
 ```
 
-### Bonus warnings
+### Warnings
 
 As a courtesy, you’ll be warned when unlikely dates arise:
 

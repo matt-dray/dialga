@@ -7,8 +7,9 @@
 cron2eng(cron = "* * * * *")
 }
 \arguments{
-\item{cron}{Character. A valid cron string composed of five cron expressions
-separated by spaces).}
+\item{cron}{Character. A valid cron string, i.e. one cron expression for each
+of the five time period slots (minutes, hours, days of the month, months,
+days of the week), separated by spaces.}
 }
 \value{
 Character. An English sentence interpretation of the input cron
@@ -20,6 +21,7 @@ equivalent sentence in English. Can take the output from \code{\link{r2cron}}
 for example. (Under development.)
 }
 \examples{
-\dontrun{cron2eng("1,2,5 2-3 * 1/3 5")}
+\dontrun{
+cron2eng("1,2,5 2-3 * 1/3 5")}
 
 }
