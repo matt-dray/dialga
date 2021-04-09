@@ -307,11 +307,11 @@ cron2eng <- function(cron = "* * * * *") {
   # )
   cat(
     paste0("Cron string '", cron, "' means:"),
-    paste0("  • ", p_list[[1]]),
-    paste0("  • ", p_list[[2]]),
-    paste0("  • ", p_list[[3]]),
-    paste0("  • ", p_list[[4]]),
-    paste0("  • ", p_list[[5]]),
+    paste0("  - ", p_list[[1]]),
+    paste0("  - ", p_list[[2]]),
+    paste0("  - ", p_list[[3]]),
+    paste0("  - ", p_list[[4]]),
+    paste0("  - ", p_list[[5]]),
     sep = "\n"
   )
 
