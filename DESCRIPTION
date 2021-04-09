@@ -19,7 +19,9 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
     clipr,
-    stringr
+    knitr,
+    stringr,
+    tools
 Suggests: 
     testthat (>= 3.0.0),
     covr

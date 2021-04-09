@@ -127,13 +127,6 @@ test_that("r2cron() clipboard-copying is supported", {
 
 # cron2eng()
 
-test_that("empty cron2eng() returns 'every minute'", {
-
-  expect_equal(cron2eng(), "every minute")
-  expect_length(cron2eng(), 1)
-
-})
-
 test_that("cron2eng() errors with bad input", {
 
   expect_error(cron2eng(1))
@@ -148,13 +141,6 @@ test_that("cron2eng() errors with bad input", {
 
 test_that("cron2eng() outputs as expected", {
 
-  expect_length(cron2eng(), 1)
-  expect_equal(
-    cron2eng("1 1,3 1-3 1/2 *"),
-      paste(
-        "minute(s) 1; hour(s) 1, 3; day(s) of the month 1 to 3; every 2",
-        "month(s) starting from month(s) 1; every day(s) of the week"
-      )
-    )
+  expect_output(cron2eng())
 
 })

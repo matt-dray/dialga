@@ -43,8 +43,8 @@ library(dialga)
 
 There’s currently two functions: `r2cron()` takes integer vectors as
 inputs to time-period arguments and spits out a cron string, and
-`cron2eng()` takes a valid cron string and prints it as an English
-sentence. See `?dialga::r2cron()` and `?dialga::cron2eng()` for further
+`cron2eng()` takes a valid cron string and prints out a readable English
+version. See `?dialga::r2cron()` and `?dialga::cron2eng()` for further
 details.
 
 ### Simple
@@ -63,12 +63,17 @@ x
 #> [1] "28 23 * * *"
 ```
 
-To confirm, we can pass that cron string into `cron2eng()`. Note that
-output is rudimentary for now.
+To confirm, we can pass that cron string into `cron2eng()`. The output
+isn’t sophisticated, but it communicates the point.
 
 ``` r
 dialga::cron2eng(x)
-#> [1] "minute(s) 28; hour(s) 23; every day(s) of the month; every month(s); every day(s) of the week"
+#> Cron string '28 23 * * *' means:
+#>   • minute(s) 28
+#>   • hour(s) 11PM
+#>   • every day(s) of the month
+#>   • every month(s)
+#>   • every day(s) of the week
 ```
 
 You could pipe these functions together to go from R to English.
@@ -78,7 +83,12 @@ library(magrittr)  # for %>%
 
 dialga::r2cron(minutes = 28, hours = 23, clip = FALSE) %>% 
   dialga::cron2eng()
-#> [1] "minute(s) 28; hour(s) 23; every day(s) of the month; every month(s); every day(s) of the week"
+#> Cron string '28 23 * * *' means:
+#>   • minute(s) 28
+#>   • hour(s) 11PM
+#>   • every day(s) of the month
+#>   • every month(s)
+#>   • every day(s) of the week
 ```
 
 ### Complex
@@ -101,11 +111,16 @@ y
 #> [1] "0/20 15-17 1 4,10,11 0,6"
 ```
 
-And to convert that to a sentence:
+And in English:
 
 ``` r
 dialga::cron2eng(y)
-#> [1] "every 20 minute(s) starting from minute(s) 0; hour(s) 15 to 17; day(s) of the month 1; month(s) 4, 10, 11; day(s) of the week 0, 6"
+#> Cron string '0/20 15-17 1 4,10,11 0,6' means:
+#>   • every 20 minute(s) starting from minute(s) 0
+#>   • hour(s) 3PM to 5PM
+#>   • day(s) of the month 1
+#>   • month(s) April, October, and November
+#>   • day(s) of the week Sunday and Saturday
 ```
 
 ### Warnings

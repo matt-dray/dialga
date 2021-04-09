@@ -1,6 +1,6 @@
 # dialga 0.0.0.9002
 
-* Add basic `cron2eng()` function (#5)
+* Add basic `cron2eng()` function (#5) and improved output format (#10)
 * Fixed bug where `days_week = c(1, 7)` was output to `"0/6"` instead of `"0,6"`
 * Document internal functions
 * Test `x/y` edge cases (#9)

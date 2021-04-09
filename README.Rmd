@@ -47,7 +47,7 @@ library(dialga)
 
 ## Demonstration
 
-There's currently two functions: `r2cron()` takes integer vectors as inputs to time-period arguments and spits out a cron string, and `cron2eng()` takes a valid cron string and prints it as an English sentence. See `?dialga::r2cron()` and `?dialga::cron2eng()` for further details.
+There's currently two functions: `r2cron()` takes integer vectors as inputs to time-period arguments and spits out a cron string, and `cron2eng()` takes a valid cron string and prints out a readable English version. See `?dialga::r2cron()` and `?dialga::cron2eng()` for further details.
 
 ### Simple
 
@@ -63,7 +63,7 @@ x <- dialga::r2cron(
 x
 ```
 
-To confirm, we can pass that cron string into `cron2eng()`. Note that output is rudimentary for now.
+To confirm, we can pass that cron string into `cron2eng()`. The output isn't sophisticated, but it communicates the point.
 
 ```{r cron2eng-simple}
 dialga::cron2eng(x)
@@ -95,7 +95,7 @@ y <- dialga::r2cron(
 y
 ```
 
-And to convert that to a sentence:
+And in English:
 
 ```{r cron2eng-complex}
 dialga::cron2eng(y)
