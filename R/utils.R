@@ -25,7 +25,9 @@
     1L:7L
   }
 
-  if (is.character(x) & !all(x == "*") | is.numeric(x) & !all(x %in% r)) {
+  if (is.logical(x) |
+      is.character(x) & !all(x == "*") |
+      is.numeric(x) & !all(x %in% r)) {
 
     # Fail if input is outside valid range for the time period
     stop(
@@ -77,10 +79,6 @@
         p == "days_week" & length(x) == length(seq(x[1], 6, unique(diff(x))))) {
 
       paste0(x[1], "/", unique(diff(x)))  # i.e. seq(0, 59, 20) is "0/20"
-
-    } else {
-
-      paste0(x, collapse = ",")  # otherwise like "1,2,5"
 
     }
 

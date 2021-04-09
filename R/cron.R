@@ -112,7 +112,16 @@ r2cron <- function(minutes = 0L:59L, hours  = 0L:23L,
 #'
 cron2eng <- function(cron = "* * * * *") {
 
-  if (!is.character(cron) | length(strsplit(cron, " ")[[1]]) != 5) {
+  if (!is.character(cron)) {
+    stop("Argument 'cron' must be a valid chaacter-class cron expression.")
+  }
+
+  if (length(strsplit(cron, " ")[[1]]) != 5) {
+    stop("Argument 'cron' must be a valid cron expression.")
+  }
+
+  if (!all(stringr::str_detect(stringr::str_split(cron,"")[[1]],
+                               "\\*|\\d|[:space:]|,|/|-"))) {
     stop("Argument 'cron' must be a valid cron expression.")
   }
 
