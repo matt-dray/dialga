@@ -15,6 +15,8 @@ proof-of-concept.](https://www.repostatus.org/badges/latest/concept.svg)](https:
 [![Codecov test
 coverage](https://codecov.io/gh/matt-dray/dialga/branch/main/graph/badge.svg)](https://codecov.io/gh/matt-dray/dialga?branch=main)
 [![CodeFactor](https://www.codefactor.io/repository/github/matt-dray/dialga/badge)](https://www.codefactor.io/repository/github/matt-dray/dialga)
+[![rostrum.blog
+post](https://img.shields.io/badge/rostrum.blog-post-008900?style=flat&labelColor=black&logo=data:image/gif;base64,R0lGODlhEAAQAPEAAAAAABWCBAAAAAAAACH5BAlkAAIAIf8LTkVUU0NBUEUyLjADAQAAACwAAAAAEAAQAAAC55QkISIiEoQQQgghRBBCiCAIgiAIgiAIQiAIgSAIgiAIQiAIgRAEQiAQBAQCgUAQEAQEgYAgIAgIBAKBQBAQCAKBQEAgCAgEAoFAIAgEBAKBIBAQCAQCgUAgEAgCgUBAICAgICAgIBAgEBAgEBAgEBAgECAgICAgECAQIBAQIBAgECAgICAgICAgECAQECAQICAgICAgICAgEBAgEBAgEBAgICAgICAgECAQIBAQIBAgECAgICAgIBAgECAQECAQIBAgICAgIBAgIBAgEBAgECAgECAgICAgICAgECAgECAgQIAAAQIKAAAh+QQJZAACACwAAAAAEAAQAAAC55QkIiESIoQQQgghhAhCBCEIgiAIgiAIQiAIgSAIgiAIQiAIgRAEQiAQBAQCgUAQEAQEgYAgIAgIBAKBQBAQCAKBQEAgCAgEAoFAIAgEBAKBIBAQCAQCgUAgEAgCgUBAICAgICAgIBAgEBAgEBAgEBAgECAgICAgECAQIBAQIBAgECAgICAgICAgECAQECAQICAgICAgICAgEBAgEBAgEBAgICAgICAgECAQIBAQIBAgECAgICAgIBAgECAQECAQIBAgICAgIBAgIBAgEBAgECAgECAgICAgICAgECAgECAgQIAAAQIKAAA7)](https://www.rostrum.blog/2021/04/10/dialga/)
 <!-- badges: end -->
 
 ## Purpose
@@ -28,12 +30,8 @@ strings detail concisely the required schedule. They require a specific
 format, like `"0/15 * 1,3,20 6 0,6"`, but it can be difficult to
 remember how to structure them.
 
-Under development. Just for fun. Bugs likely.
-
-This package is a product of
-[Pokémon](https://www.pokemon.com/uk/)-Driven Development (PDD). Dialga
-is [the ‘temporal
-Pokémon’](https://bulbapedia.bulbagarden.net/wiki/Dialga_(Pok%C3%A9mon)).
+Under development. Just for fun. Bugs likely. Read more in [the
+accompanying blog post](https://www.rostrum.blog/2021/04/10/dialga/).
 
 ## Install
 
@@ -74,7 +72,12 @@ isn’t sophisticated, but it communicates the point.
 
 ``` r
 dialga::cron2eng(x)
-#> [1] "minute(s) 28; hour(s) 23; every day(s) of the month; every month(s); every day(s) of the week"
+#> Cron string '28 23 * * *' means:
+#>   - minute(s) 28
+#>   - hour(s) 11PM
+#>   - every day(s) of the month
+#>   - every month(s)
+#>   - every day(s) of the week
 ```
 
 You could pipe these functions together to go from R to English.
@@ -84,7 +87,12 @@ library(magrittr)  # for %>%
 
 dialga::r2cron(minutes = 28, hours = 23, clip = FALSE) %>% 
   dialga::cron2eng()
-#> [1] "minute(s) 28; hour(s) 23; every day(s) of the month; every month(s); every day(s) of the week"
+#> Cron string '28 23 * * *' means:
+#>   - minute(s) 28
+#>   - hour(s) 11PM
+#>   - every day(s) of the month
+#>   - every month(s)
+#>   - every day(s) of the week
 ```
 
 ### Complex
@@ -104,14 +112,19 @@ y <- dialga::r2cron(
 )
 
 y
-#> [1] "0/20 15-17 1 4,10,11 0/6"
+#> [1] "0/20 15-17 1 4,10,11 0,6"
 ```
 
 And in English:
 
 ``` r
 dialga::cron2eng(y)
-#> [1] "every 20 minute(s) starting from minute(s) 0; hour(s) 15 to 17; day(s) of the month 1; month(s) 4, 10, 11; every 6 day(s) of the week starting from day(s) of the week 0"
+#> Cron string '0/20 15-17 1 4,10,11 0,6' means:
+#>   - every 20 minute(s) starting from minute(s) 0
+#>   - hour(s) 3PM to 5PM
+#>   - day(s) of the month 1
+#>   - month(s) April, October, and November
+#>   - day(s) of the week Sunday and Saturday
 ```
 
 ### Warnings
