@@ -15,7 +15,9 @@ knitr::opts_chunk$set(
 library(dialga)
 ```
 
-# dialga
+<img src="https://raw.githubusercontent.com/matt-dray/stickers/master/output/dialga_hex.png" width="150" align="right">
+
+# {dialga}
 
 <!-- badges: start -->
 [![Project Status: Concept – Minimal or no implementation has been done
