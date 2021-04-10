@@ -17,10 +17,14 @@ coverage](https://codecov.io/gh/matt-dray/dialga/branch/main/graph/badge.svg)](h
 
 ## Purpose
 
-{dialga} is an R package that helps you build and interpret standard
-[cron
-expressions](https://en.wikipedia.org/wiki/Cron#CRON_expression)—which
-are pretty esoteric—using friendly R syntax.
+{dialga} is an R package that lets you build and interpret standard
+[cron expressions](https://en.wikipedia.org/wiki/Cron#CRON_expression)
+using familiar R syntax.
+
+Cron is software for scheduling computer tasks (‘cron jobs’). Cron
+strings detail concisely the required schedule. They require a specific
+format, like `"0/15 * 1,3,20 6 0,6"`, but it can be difficult to
+remember how to structure them.
 
 Under development. Just for fun. Bugs likely.
 

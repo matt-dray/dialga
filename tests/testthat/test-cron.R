@@ -1,4 +1,6 @@
-# r2cron()
+
+# r2cron() ----------------------------------------------------------------
+
 
 test_that("empty r2cron() returns all-asterisk string", {
   expect_equal(r2cron(clip = FALSE), "* * * * *")
@@ -10,7 +12,7 @@ test_that("r2cron() minutes argument works", {
  expect_equal(r2cron(minutes = 0:59, clip = FALSE), "* * * * *")
  expect_equal(r2cron(minutes = 1, clip = FALSE), "1 * * * *")
  expect_equal(r2cron(minutes = 1:3, clip = FALSE), "1-3 * * * *")
- expect_equal(r2cron(minutes = 1:2, clip = FALSE), "1-2 * * * *")  # maybe 1,2
+ expect_equal(r2cron(minutes = 1:2, clip = FALSE), "1-2 * * * *")
  expect_equal(r2cron(minutes = seq(0, 59, 15), clip = FALSE), "0/15 * * * *")
  expect_equal(r2cron(minutes = c(1, 6), clip = FALSE), "1,6 * * * *")
  expect_equal(r2cron(minutes = c(1, 6, 20), clip = FALSE), "1,6,20 * * * *")
@@ -89,7 +91,7 @@ test_that("r2cron() days_week argument works", {
  expect_equal(r2cron(days_week = 2:3, clip = FALSE), "* * * * 1-2")
  expect_equal(r2cron(days_week = seq(1, 7, 2), clip = FALSE), "* * * * 0/2")
  expect_equal(r2cron(days_week = c(1, 3), clip = FALSE), "* * * * 0,2")
- expect_equal(r2cron(days_week = c(1, 7), clip = FALSE), "* * * * 0,6")  # outputs 0/6, why?
+ expect_equal(r2cron(days_week = c(1, 7), clip = FALSE), "* * * * 0,6")
  expect_equal(r2cron(days_week = c(1, 3, 4), clip = FALSE), "* * * * 0,2,3")
 
  expect_error(r2cron(days_week = "x", clip = FALSE))
@@ -125,7 +127,9 @@ test_that("r2cron() clipboard-copying is supported", {
 
 })
 
-# cron2eng()
+
+# cron2eng() --------------------------------------------------------------
+
 
 test_that("cron2eng() errors with bad input", {
 
@@ -142,5 +146,7 @@ test_that("cron2eng() errors with bad input", {
 test_that("cron2eng() outputs as expected", {
 
   expect_output(cron2eng())
+  expect_output(cron2eng("1-3 1 1,3,4 1 1"))
+  expect_output(cron2eng("* 1/5 * 1/3 0/2"))
 
 })
