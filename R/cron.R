@@ -299,12 +299,6 @@ cron2eng <- function(cron = "* * * * *") {
   }
 
   # Collate sentences for each time period
-  # paste0(paste(p_list, collapse = "; "), ".")
-  # paste0(
-  #   p_list[[1]], " of ", p_list[[2]],
-  #   "; on ", p_list[[3]], ", of ", p_list[[4]],
-  #   "; incuding ", p_list[[5]], "."
-  # )
   cat(
     paste0("Cron string '", cron, "' means:"),
     paste0("  - ", p_list[[1]]),

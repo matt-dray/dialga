@@ -6,11 +6,12 @@
 \alias{dialga-package}
 \title{dialga: Build and Interpret Cron Strings with R}
 \description{
-Provide R expressions as inputs and get a standard cron string in
-    return. These strings are in a special format that's recognised by various
-    systems that are designed to help you schedule computer tasks. It's easy to
-    forget the required esoteric structure, hence the existence of web services
-    like <https://crontab.guru/> and this package.
+Provide R integer vectors as inputs and get a standard cron string
+    in return. Cron strings are in a special format that's recognised by cron
+    software to help you schedule computer tasks. It's easy to forget the
+    required esoteric structure, hence the existence of web services like
+    <https://crontab.guru/> and this package. You can also supply a cron string
+    and get an English interpretation in return.
 }
 \seealso{
 Useful links:
