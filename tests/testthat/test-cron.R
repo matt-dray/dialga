@@ -150,3 +150,13 @@ test_that("cron2eng() outputs as expected", {
   expect_output(cron2eng("* 1/5 * 1/3 0/2"))
 
 })
+
+test_that(".vec2eng() does its job", {
+
+  expect_error(dialga:::.vec2eng(iris))
+  expect_error(dialga:::.vec2eng(list(x = 1, y = 1)))
+  expect_equal(dialga:::.vec2eng(letters[1]), "a")
+  expect_equal(dialga:::.vec2eng(letters[1:2]), "a and b")
+  expect_equal(dialga:::.vec2eng(letters[1:3]), "a, b and c")
+
+})

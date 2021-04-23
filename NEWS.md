@@ -1,3 +1,7 @@
+# dialga 0.0.0.9003
+
+* Eliminated {knitr} dependency (#11)
+
 # dialga 0.0.0.9002
 
 * Add basic `cron2eng()` function (#5) and improved output format (#10)

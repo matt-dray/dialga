@@ -281,7 +281,7 @@ cron2eng <- function(cron = "* * * * *") {
 
       # Nonconsecutive, irregularly spaced integers
       n_units <- stringr::str_split(p_list[[p]], ",")[[1]]
-      p_list[[p]] <- paste(p, knitr::combine_words(n_units))
+      p_list[[p]] <- paste(p, .vec2eng(n_units))
 
     } else if (stringr::str_detect(p_list[[p]], "^\\w{1,}/\\w{1,}$")) {
 

@@ -89,3 +89,27 @@
   }
 
 }
+
+#' Convert a Vector to a Sentence
+#'
+#' Paste elements of a vector into sentence form, so that items are separated by
+#' commas and the last is separated with the word 'and'. Used for output in
+#' \code{\link{cron2eng}}.
+#'
+#' @param x A vector.
+#'
+#' @return A character string.
+#'
+.vec2eng <- function(x) {
+
+  if(!is.atomic(x)) {
+    stop(".vec2eng input must be a vector")
+  }
+
+  if (length(x) == 1) {
+    x
+  } else if (length(x) > 1) {
+    paste(paste(x[1:length(x)-1], collapse = ", "), "and", x[length(x)])
+  }
+
+}
