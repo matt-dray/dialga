@@ -10,7 +10,7 @@ r2cron(
   days_month = 1L:31L,
   months = 1L:12L,
   days_week = 1L:7L,
-  clip = TRUE
+  clip = FALSE
 )
 }
 \arguments{
@@ -25,7 +25,8 @@ r2cron(
 \item{days_week}{Day of the week, integers 1 to 7 inclusive (where Sunday is
 the first day of the week).}
 
-\item{clip}{Logical. Copy output to clipboard?}
+\item{clip}{Logical. Copy output to clipboard? Windows, macOS and X11 only.
+Requires installation of the {clipr} package.}
 }
 \value{
 A character string (copied to the clipboard at the user's

@@ -7,18 +7,42 @@
 cron2eng(cron = "* * * * *")
 }
 \arguments{
-\item{cron}{Character. A valid cron string, i.e. one cron expression for each
-of the five time period slots (minutes, hours, days of the month, months,
-days of the week), separated by spaces.}
+\item{cron}{Character. A valid cron expression, i.e. a string with five
+time period 'slots' (minutes, hours, days of the month, months, days of
+the week), separated by spaces. See details for more information.}
 }
 \value{
-Character. An English sentence interpretation of the input cron
-expression.
+Result printed to console. An English sentence interpretation of the
+cron string that was the input.
 }
 \description{
 Demystify the meaning of a valid cron string by converting it to an
 equivalent sentence in English. Can take the output from \code{\link{r2cron}}
 for example. (Under development.)
+}
+\details{
+The cron string slots and their valid ranges are:
+\itemize{
+\item Slot 1: minutes past the hour, integers 0 to 59 inclusive.
+\item Slot 2: hours on a 24-hour clock, integers 0 to 23 inclusive.
+\item Slot 3: day number of the month, integers 1 to 31 inclusive.
+\item Slot 4: month number, integers 1 to 12 inclusive.
+\item Slot 5: day of the week, integers 0 to 6 inclusive (where Sunday is
+the first day of the week).
+}
+
+In addition, the following input formats are acceptable to all the time
+slots:
+\itemize{
+\item a single integer value, like \code{1}
+\item consecutive-integer vectors, like \code{1:3}
+\item nonconsecutive, irregularly-spaced integer vectors, like
+\code{c(2, 3, 5)}
+\item regularly-spaced integer sequences with specified start and end
+values, like \code{seq(3, 59, 15)} (useful for specifying
+sequences within the full time period,'every 15 minutes of the
+hour starting from minute 3', like in this example)
+}
 }
 \examples{
 \dontrun{

@@ -11,7 +11,8 @@
 #' @param months Month number, integers 1 to 12 inclusive.
 #' @param days_week Day of the week, integers 1 to 7 inclusive (where Sunday is
 #'     the first day of the week).
-#' @param clip Logical. Copy output to clipboard?
+#' @param clip Logical. Copy output to clipboard? Windows, macOS and X11 only.
+#'     Requires installation of the {clipr} package.
 #'
 #' @details The time-period arguments default to every unit within that time
 #'     period, like 'every minute, of every hour, of every day of the month,
@@ -44,7 +45,7 @@
 #'
 r2cron <- function(minutes = 0L:59L, hours  = 0L:23L,
                    days_month  = 1L:31L, months = 1L:12L, days_week  = 1L:7L,
-                   clip = TRUE) {
+                   clip = FALSE) {
 
  # Stop if input is out of range of time period
  .stop(minutes, "minutes")
@@ -99,12 +100,35 @@ r2cron <- function(minutes = 0L:59L, hours  = 0L:23L,
 #' equivalent sentence in English. Can take the output from \code{\link{r2cron}}
 #' for example. (Under development.)
 #'
-#' @param cron Character. A valid cron string, i.e. one cron expression for each
-#'     of the five time period slots (minutes, hours, days of the month, months,
-#'     days of the week), separated by spaces.
+#' @param cron Character. A valid cron expression, i.e. a string with five
+#'     time period 'slots' (minutes, hours, days of the month, months, days of
+#'     the week), separated by spaces. See details for more information.
 #'
-#' @return Character. An English sentence interpretation of the input cron
-#'     expression.
+#' @details The cron string slots and their valid ranges are:
+#' \itemize{
+#'   \item Slot 1: minutes past the hour, integers 0 to 59 inclusive.
+#'   \item Slot 2: hours on a 24-hour clock, integers 0 to 23 inclusive.
+#'   \item Slot 3: day number of the month, integers 1 to 31 inclusive.
+#'   \item Slot 4: month number, integers 1 to 12 inclusive.
+#'   \item Slot 5: day of the week, integers 0 to 6 inclusive (where Sunday is
+#'     the first day of the week).
+#' }
+#'
+#' In addition, the following input formats are acceptable to all the time
+#' slots:
+#' \itemize{
+#'   \item a single integer value, like \code{1}
+#'   \item consecutive-integer vectors, like \code{1:3}
+#'   \item nonconsecutive, irregularly-spaced integer vectors, like
+#'       \code{c(2, 3, 5)}
+#'   \item regularly-spaced integer sequences with specified start and end
+#'       values, like \code{seq(3, 59, 15)} (useful for specifying
+#'       sequences within the full time period,'every 15 minutes of the
+#'       hour starting from minute 3', like in this example)
+#' }
+#'
+#' @return Result printed to console. An English sentence interpretation of the
+#'     cron string that was the input.
 #' @export
 #'
 #' @examples \dontrun{
@@ -113,16 +137,21 @@ r2cron <- function(minutes = 0L:59L, hours  = 0L:23L,
 cron2eng <- function(cron = "* * * * *") {
 
   if (!is.character(cron)) {
-    stop("Argument 'cron' must be a valid chaacter-class cron expression.")
+    stop("Argument 'cron' must be a valid character-class cron expression.")
   }
 
   if (length(strsplit(cron, " ")[[1]]) != 5) {
     stop("Argument 'cron' must be a valid cron expression.")
   }
 
-  if (!all(stringr::str_detect(stringr::str_split(cron,"")[[1]],
-                               "\\*|\\d|[:space:]|,|/|-"))) {
-    stop("Argument 'cron' must be a valid cron expression.")
+  if (length(strsplit(cron, " ")[[1]]) != 5 |  # 5 time slots
+      !all(grepl("\\d|\\*|\\s|,|/|-", strsplit(cron, "")[[1]])) |  # valid chars
+      !all(grepl("\\b[0-9]\\b|\\b[1-5][0-9]\\b|\\*",
+                 strsplit(cron, "\\s|,|/|-")[[1]])) ) {  # valid number range
+    stop(
+      "Argument 'cron' must have five 'time slots' separated by spaces.\n",
+      "Slots must contain valid integers or '*', '/', '-' and ',."
+    )
   }
 
   # Split each time period to a list element
@@ -134,123 +163,123 @@ cron2eng <- function(cron = "* * * * *") {
     "month(s)", "day(s) of the week"
   )
 
-  if (stringr::str_detect(p_list[[2]], "\\d")) {
+  if (grepl("\\d", p_list[[2]])) {
 
-    if (stringr::str_detect(p_list[[2]], "/")) {
+    if (grepl("/", p_list[[2]])) {
 
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^0(?=/)",  "12AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^1(?=/)",  "1AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^2(?=/)",  "2AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^3(?=/)",  "3AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^4(?=/)",  "4AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^5(?=/)",  "5AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^6(?=/)",  "6AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^7(?=/)",  "7AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^8(?=/)",  "8AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^9(?=/)",  "9AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^10(?=/)", "10AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^11(?=/)", "11AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^12(?=/)", "12PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^13(?=/)", "1PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^14(?=/)", "2PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^15(?=/)", "3PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^16(?=/)", "4PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^17(?=/)", "5PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^18(?=/)", "6PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^19(?=/)", "7PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^20(?=/)", "8PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^21(?=/)", "9PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^22(?=/)", "10PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "^23(?=/)", "11PM")
+      p_list[[2]] <- gsub("^0(?=/)",  "12AM", p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^1(?=/)",  "1AM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^2(?=/)",  "2AM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^3(?=/)",  "3AM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^4(?=/)",  "4AM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^5(?=/)",  "5AM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^6(?=/)",  "6AM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^7(?=/)",  "7AM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^8(?=/)",  "8AM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^9(?=/)",  "9AM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^10(?=/)", "10AM", p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^11(?=/)", "11AM", p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^12(?=/)", "12PM", p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^13(?=/)", "1PM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^14(?=/)", "2PM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^15(?=/)", "3PM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^16(?=/)", "4PM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^17(?=/)", "5PM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^18(?=/)", "6PM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^19(?=/)", "7PM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^20(?=/)", "8PM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^21(?=/)", "9PM",  p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^22(?=/)", "10PM", p_list[[2]], perl = TRUE)
+      p_list[[2]] <- gsub("^23(?=/)", "11PM", p_list[[2]], perl = TRUE)
 
     } else {
 
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b0\\b",  "12AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b1\\b",  "1AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b2\\b",  "2AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b3\\b",  "3AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b4\\b",  "4AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b5\\b",  "5AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b6\\b",  "6AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b7\\b",  "7AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b8\\b",  "8AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b9\\b",  "9AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b10\\b", "10AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b11\\b", "11AM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b12\\b", "12PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b13\\b", "1PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b14\\b", "2PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b15\\b", "3PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b16\\b", "4PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b17\\b", "5PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b18\\b", "6PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b19\\b", "7PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b20\\b", "8PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b21\\b", "9PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b22\\b", "10PM")
-      p_list[[2]] <- stringr::str_replace(p_list[[2]], "\\b23\\b", "11PM")
+      p_list[[2]] <- gsub("\\b0\\b",  "12AM", p_list[[2]])
+      p_list[[2]] <- gsub("\\b1\\b",  "1AM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b2\\b",  "2AM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b3\\b",  "3AM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b4\\b",  "4AM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b5\\b",  "5AM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b6\\b",  "6AM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b7\\b",  "7AM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b8\\b",  "8AM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b9\\b",  "9AM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b10\\b", "10AM", p_list[[2]])
+      p_list[[2]] <- gsub("\\b11\\b", "11AM", p_list[[2]])
+      p_list[[2]] <- gsub("\\b12\\b", "12PM", p_list[[2]])
+      p_list[[2]] <- gsub("\\b13\\b", "1PM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b14\\b", "2PM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b15\\b", "3PM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b16\\b", "4PM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b17\\b", "5PM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b18\\b", "6PM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b19\\b", "7PM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b20\\b", "8PM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b21\\b", "9PM",  p_list[[2]])
+      p_list[[2]] <- gsub("\\b22\\b", "10PM", p_list[[2]])
+      p_list[[2]] <- gsub("\\b23\\b", "11PM", p_list[[2]])
 
     }
 
   }
 
-  if (stringr::str_detect(p_list[[4]], "\\d")) {
+  if (grepl("\\d", p_list[[4]])) {
 
-    if (stringr::str_detect(p_list[[4]], "/")) {
+    if (grepl("/", p_list[[4]])) {
 
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "^1(?=/)", "January")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "^2(?=/)", "February")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "^3(?=/)", "March")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "^4(?=/)", "April")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "^5(?=/)", "May")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "^6(?=/)", "June")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "^7(?=/)", "July")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "^8(?=/)", "August")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "^9(?=/)", "September")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "^10(?=/)", "October")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "^11(?=/)", "November")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "^12(?=/)", "December")
+      p_list[[4]] <- gsub("^1(?=/)",  "January",   p_list[[4]], perl = TRUE)
+      p_list[[4]] <- gsub("^2(?=/)",  "February",  p_list[[4]], perl = TRUE)
+      p_list[[4]] <- gsub("^3(?=/)",  "March",     p_list[[4]], perl = TRUE)
+      p_list[[4]] <- gsub("^4(?=/)",  "April",     p_list[[4]], perl = TRUE)
+      p_list[[4]] <- gsub("^5(?=/)",  "May",       p_list[[4]], perl = TRUE)
+      p_list[[4]] <- gsub("^6(?=/)",  "June",      p_list[[4]], perl = TRUE)
+      p_list[[4]] <- gsub("^7(?=/)",  "July",      p_list[[4]], perl = TRUE)
+      p_list[[4]] <- gsub("^8(?=/)",  "August",    p_list[[4]], perl = TRUE)
+      p_list[[4]] <- gsub("^9(?=/)",  "September", p_list[[4]], perl = TRUE)
+      p_list[[4]] <- gsub("^10(?=/)", "October",   p_list[[4]], perl = TRUE)
+      p_list[[4]] <- gsub("^11(?=/)", "November",  p_list[[4]], perl = TRUE)
+      p_list[[4]] <- gsub("^12(?=/)", "December",  p_list[[4]], perl = TRUE)
 
     } else {
 
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "\\b1\\b", "January")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "\\b2\\b", "February")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "\\b3\\b", "March")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "\\b4\\b", "April")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "\\b5\\b", "May")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "\\b6\\b", "June")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "\\b7\\b", "July")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "\\b8\\b", "August")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "\\b9\\b", "September")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "\\b10\\b", "October")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "\\b11\\b", "November")
-      p_list[[4]] <- stringr::str_replace(p_list[[4]], "\\b12\\b", "December")
+      p_list[[4]] <- gsub("\\b1\\b",  "January",   p_list[[4]])
+      p_list[[4]] <- gsub("\\b2\\b",  "February",  p_list[[4]])
+      p_list[[4]] <- gsub("\\b3\\b",  "March",     p_list[[4]])
+      p_list[[4]] <- gsub("\\b4\\b",  "April",     p_list[[4]])
+      p_list[[4]] <- gsub("\\b5\\b",  "May",       p_list[[4]])
+      p_list[[4]] <- gsub("\\b6\\b",  "June",      p_list[[4]])
+      p_list[[4]] <- gsub("\\b7\\b",  "July",      p_list[[4]])
+      p_list[[4]] <- gsub("\\b8\\b",  "August",    p_list[[4]])
+      p_list[[4]] <- gsub("\\b9\\b",  "September", p_list[[4]])
+      p_list[[4]] <- gsub("\\b10\\b", "October",   p_list[[4]])
+      p_list[[4]] <- gsub("\\b11\\b", "November",  p_list[[4]])
+      p_list[[4]] <- gsub("\\b12\\b", "December",  p_list[[4]])
 
     }
 
   }
 
-  if (stringr::str_detect(p_list[[5]], "\\d")) {
+  if (grepl("\\d", p_list[[5]])) {
 
-    if (stringr::str_detect(p_list[[5]], "/")) {
+    if (grepl("/", p_list[[5]])) {
 
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "0(?=/)", "Sunday")
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "1(?=/)", "Monday")
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "2(?=/)", "Tuesday")
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "3(?=/)", "Wednesday")
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "4(?=/)", "Thursday")
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "5(?=/)", "Friday")
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "6(?=/)", "Saturday")
+      p_list[[5]] <- gsub("0(?=/)", "Sunday",    p_list[[5]], perl = TRUE)
+      p_list[[5]] <- gsub("1(?=/)", "Monday",    p_list[[5]], perl = TRUE)
+      p_list[[5]] <- gsub("2(?=/)", "Tuesday",   p_list[[5]], perl = TRUE)
+      p_list[[5]] <- gsub("3(?=/)", "Wednesday", p_list[[5]], perl = TRUE)
+      p_list[[5]] <- gsub("4(?=/)", "Thursday",  p_list[[5]], perl = TRUE)
+      p_list[[5]] <- gsub("5(?=/)", "Friday",    p_list[[5]], perl = TRUE)
+      p_list[[5]] <- gsub("6(?=/)", "Saturday",  p_list[[5]], perl = TRUE)
 
     } else {
 
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "0", "Sunday")
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "1", "Monday")
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "2", "Tuesday")
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "3", "Wednesday")
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "4", "Thursday")
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "5", "Friday")
-      p_list[[5]] <- stringr::str_replace(p_list[[5]], "6", "Saturday")
+      p_list[[5]] <- gsub("0", "Sunday",    p_list[[5]])
+      p_list[[5]] <- gsub("1", "Monday",    p_list[[5]])
+      p_list[[5]] <- gsub("2", "Tuesday",   p_list[[5]])
+      p_list[[5]] <- gsub("3", "Wednesday", p_list[[5]])
+      p_list[[5]] <- gsub("4", "Thursday",  p_list[[5]])
+      p_list[[5]] <- gsub("5", "Friday",    p_list[[5]])
+      p_list[[5]] <- gsub("6", "Saturday",  p_list[[5]])
 
     }
 
@@ -262,14 +291,18 @@ cron2eng <- function(cron = "* * * * *") {
     if (p_list[[p]] == "*") {
 
       # Every valid unit of the time period
-      p_list[[p]] <- paste("every", p)
+      if (p == names(p_list)[5]) {
+        p_list[[p]] <- paste("any", p)  # more specific for day of week
+      } else {
+        p_list[[p]] <- paste("every", p)
+      }
 
-    } else if (stringr::str_detect(p_list[[p]], "^\\d{1,2}$|^\\w{1,}$")) {
+    } else if (grepl("^\\d{1,2}$|^\\w{1,}$", p_list[[p]])) {
 
       # Single integer value
       p_list[[p]] <- paste(p, p_list[[p]])
 
-    } else if (stringr::str_detect(p_list[[p]], "^\\w{1,}-\\w{1,}$")) {
+    } else if (grepl("^\\w{1,}-\\w{1,}$", p_list[[p]])) {
 
       # Consecutive units with non-min start and non-max stop value
       n_split <- strsplit(p_list[[p]], "-")
@@ -277,13 +310,13 @@ cron2eng <- function(cron = "* * * * *") {
         p, n_split[[1]][1], "to", n_split[[1]][2]
       )
 
-    } else if (stringr::str_detect(p_list[[p]], "^\\w{1,},")) {
+    } else if (grepl("^\\w{1,},", p_list[[p]])) {
 
       # Nonconsecutive, irregularly spaced integers
-      n_units <- stringr::str_split(p_list[[p]], ",")[[1]]
-      p_list[[p]] <- paste(p, knitr::combine_words(n_units))
+      n_units <- strsplit(p_list[[p]], ",")[[1]]
+      p_list[[p]] <- paste(p, .vec2eng(n_units))
 
-    } else if (stringr::str_detect(p_list[[p]], "^\\w{1,}/\\w{1,}$")) {
+    } else if (grepl("^\\w{1,}/\\w{1,}$", p_list[[p]])) {
 
       # regularly-spaced integer sequences with specified start and end
       n_split <- strsplit(p_list[[p]], "/")
@@ -305,7 +338,11 @@ cron2eng <- function(cron = "* * * * *") {
     paste0("  - ", p_list[[2]]),
     paste0("  - ", p_list[[3]]),
     paste0("  - ", p_list[[4]]),
-    paste0("  - ", p_list[[5]]),
+    ifelse(  # a clear 'and' for user-specified days of the week
+      grepl("^day", p_list[[5]]),
+      paste0("  - and ", p_list[[5]]),
+      paste0("  - ", p_list[[5]])
+    ),
     sep = "\n"
   )
 

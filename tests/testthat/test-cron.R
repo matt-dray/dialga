@@ -121,7 +121,6 @@ test_that("r2cron() clipboard-copying is supported", {
 
   msg <- "Copied to clipboard"
   skip_on_os("linux")  # R CMD check fails on Ubuntu because {clipr}
-  expect_output(r2cron(), msg)
   expect_output(r2cron(clip = TRUE), msg)
   expect_output(r2cron(minutes = 1, clip = TRUE), msg)
 
@@ -136,6 +135,7 @@ test_that("cron2eng() errors with bad input", {
   expect_error(cron2eng(1))
   expect_error(cron2eng("x"))
   expect_error(cron2eng("x x x x x"))
+  expect_error(cron2eng("60 * * * *"))
   expect_error(cron2eng("* * * *"))
   expect_error(cron2eng(TRUE))
   expect_error(cron2eng(mtcars))
@@ -148,5 +148,15 @@ test_that("cron2eng() outputs as expected", {
   expect_output(cron2eng())
   expect_output(cron2eng("1-3 1 1,3,4 1 1"))
   expect_output(cron2eng("* 1/5 * 1/3 0/2"))
+
+})
+
+test_that(".vec2eng() does its job", {
+
+  expect_error(dialga:::.vec2eng(iris))
+  expect_error(dialga:::.vec2eng(list(x = 1, y = 1)))
+  expect_equal(dialga:::.vec2eng(letters[1]), "a")
+  expect_equal(dialga:::.vec2eng(letters[1:2]), "a and b")
+  expect_equal(dialga:::.vec2eng(letters[1:3]), "a, b and c")
 
 })

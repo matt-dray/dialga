@@ -30,8 +30,9 @@ strings detail concisely the required schedule. They require a specific
 format, like `"0/15 * 1,3,20 6 0,6"`, but it can be difficult to
 remember how to structure them.
 
-Under development. Just for fun. Bugs likely. Read more in [the
-accompanying blog post](https://www.rostrum.blog/2021/04/10/dialga/).
+Read more in [the accompanying blog
+post](https://www.rostrum.blog/2021/04/10/dialga/) and [report any
+bugs](https://github.com/matt-dray/dialga/issues) you might find.
 
 ## Install
 
@@ -42,6 +43,12 @@ install.packages("remotes")  # if not already installed
 remotes::install_github("matt-dray/dialga")
 library(dialga)
 ```
+
+If you want to be able to have the cron string output copied directly to
+your clipboard, you’ll need to install [the {clipr}
+package](https://cran.r-project.org/package=clipr) to your machine with
+`install.packages("clipr")` as well. You don’t have to install it if you
+don’t want to.
 
 ## Demonstration
 
@@ -59,16 +66,22 @@ past 11PM every day?
 ``` r
 x <- dialga::r2cron(
   minutes = 28, 
-  hours = 23,  # 24-hour clock
-  clip = FALSE
+  hours = 23  # 24-hour clock
 )
+#> Copied to clipboard
 
 x
 #> [1] "28 23 * * *"
 ```
 
-To confirm, we can pass that cron string into `cron2eng()`. The output
-isn’t sophisticated, but it communicates the point.
+Note that you can use the argument `clip = TRUE` to have the output
+copied to your system’s clipboard so you can paste it elsewhere. You
+must install [the {clipr}
+package](https://cran.r-project.org/package=clipr) separately if you
+want this functionality.
+
+To interpret the output—and confirm we got what we expected—we can pass
+that cron string into `cron2eng()`.
 
 ``` r
 dialga::cron2eng(x)
@@ -80,13 +93,16 @@ dialga::cron2eng(x)
 #>   - every day(s) of the week
 ```
 
-You could pipe these functions together to go from R to English.
+The output isn’t sophisticated, but it communicates the point.
+
+You could even pipe these functions together to go from R to English.
 
 ``` r
 library(magrittr)  # for %>%
 
-dialga::r2cron(minutes = 28, hours = 23, clip = FALSE) %>% 
+dialga::r2cron(minutes = 28, hours = 23) %>% 
   dialga::cron2eng()
+#> Copied to clipboard
 #> Cron string '28 23 * * *' means:
 #>   - minute(s) 28
 #>   - hour(s) 11PM
@@ -107,9 +123,9 @@ y <- dialga::r2cron(
  hours = 15:17,  # 24-hr clock
  days_month = 1,
  months = c(4, 10, 11),
- days_week = c(1, 7),  # Sunday is '1'
- clip = FALSE
+ days_week = c(1, 7)  # Sunday is '1'
 )
+#> Copied to clipboard
 
 y
 #> [1] "0/20 15-17 1 4,10,11 0,6"
@@ -132,13 +148,14 @@ dialga::cron2eng(y)
 As a courtesy, you’ll be warned when unlikely dates arise:
 
 ``` r
-dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE)
-#> Warning in dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE): 
+dialga::r2cron(days_month = 28:31, months = 2)
+#> Warning in dialga::r2cron(days_month = 28:31, months = 2): 
 #>   Sure? There's no 31st in Feb, Apr, Jun, Sept nor Nov.
-#> Warning in dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE): 
+#> Warning in dialga::r2cron(days_month = 28:31, months = 2): 
 #>   Sure? There's no 30th in Feb.
-#> Warning in dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE): 
+#> Warning in dialga::r2cron(days_month = 28:31, months = 2): 
 #>   Sure? 29 Feb is only in leap years.
+#> Copied to clipboard
 #> [1] "* * 28-31 2 *"
 ```
 

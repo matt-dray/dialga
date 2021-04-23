@@ -1,16 +1,25 @@
+# dialga 0.1
+
+* Eliminated {knitr} dependency (#11)
+* Make `clip` argument `FALSE` by default in `r2cron()` (#12)
+* Eliminated {stringr} dependency (#11)
+* Add 'and' to specified day of week for clarity
+* Eliminated {stringr} dependency (#11)
+* Fixed bug where sequences for hours and days-week failed to produce output
+
 # dialga 0.0.0.9002
 
-* Add basic `cron2eng()` function (#5) and improved output format (#10)
+* Added basic `cron2eng()` function (#5) and improved output format (#10)
 * Fixed bug where `days_week = c(1, 7)` was output to `"0/6"` instead of `"0,6"`
-* Document internal functions
-* Test `x/y` edge cases (#9)
-* Basic test coverage to 100% (#8)
+* Documented internal functions
+* Tested `x/y` edge cases (#9)
+* Improved basic test coverage to 100% (#8)
 
 # dialga 0.0.0.9001
 
-* `x/y` output format now interpreted for all time period arguments (#1)
-* Default inputs are now vectors rather than asterisk character (#2)
-* Days of the week no longer zero0indexed (#6)
+* Interpreted `x/y` output format for all time period arguments (#1)
+* Changed default inputs to vectors rather than asterisk characters (#2)
+* Remove zero-indexing of days of the week (#6)
 
 # dialga 0.0.0.9000
 

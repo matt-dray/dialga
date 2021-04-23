@@ -54,11 +54,11 @@
 #'
 .as_cron <- function(x, p) {
 
-  if ((p == "minutes" & length(x) == 60 & all(x %in% 0L:59L)) |
-      (p == "hours" & length(x) == 24 & all(x %in% 0L:23L)) |
+  if ((p == "minutes"    & length(x) == 60 & all(x %in% 0L:59L)) |
+      (p == "hours"      & length(x) == 24 & all(x %in% 0L:23L)) |
       (p == "days_month" & length(x) == 31 & all(x %in% 1L:31L)) |
-      (p == "months" & length(x) == 12 & all(x %in% 1L:12L)) |
-      (p == "days_week" & length(x) == 7 & all(x %in% 0L:6L))) {
+      (p == "months"     & length(x) == 12 & all(x %in% 1L:12L)) |
+      (p == "days_week"  & length(x) == 7  & all(x %in% 0L:6L))) {
 
     "*"  # i.e. every unit of the time period
 
@@ -72,13 +72,17 @@
 
   } else if (is.numeric(x) & length(x) > 2 & length(unique(diff(x))) == 1) {
 
-    if (p == "minutes" & length(x) == length(seq(x[1], 59, unique(diff(x)))) |
-        p == "hours" & length(x) == length(seq(x[1], 23, unique(diff(x)))) |
+    if (p == "minutes"    & length(x) == length(seq(x[1], 59, unique(diff(x)))) |
+        p == "hours"      & length(x) == length(seq(x[1], 23, unique(diff(x)))) |
         p == "days_month" & length(x) == length(seq(x[1], 31, unique(diff(x)))) |
-        p == "months" & length(x) == length(seq(x[1], 12, unique(diff(x)))) |
-        p == "days_week" & length(x) == length(seq(x[1], 6, unique(diff(x))))) {
+        p == "months"     & length(x) == length(seq(x[1], 12, unique(diff(x)))) |
+        p == "days_week"  & length(x) == length(seq(x[1], 6,  unique(diff(x))))) {
 
       paste0(x[1], "/", unique(diff(x)))  # i.e. seq(0, 59, 20) is "0/20"
+
+    } else {
+
+      paste0(x, collapse = ",")  # i.e. c(1, 2, 5) becomes "1,2,5"
 
     }
 
@@ -86,6 +90,30 @@
 
     paste0(x, collapse = ",")  # i.e. c(1, 2, 5) becomes "1,2,5"
 
+  }
+
+}
+
+#' Convert a Vector to a Sentence
+#'
+#' Paste elements of a vector into sentence form, so that items are separated by
+#' commas and the last is separated with the word 'and'. Used for output in
+#' \code{\link{cron2eng}}.
+#'
+#' @param x A vector.
+#'
+#' @return A character string.
+#'
+.vec2eng <- function(x) {
+
+  if(!is.atomic(x)) {
+    stop(".vec2eng input must be a vector")
+  }
+
+  if (length(x) == 1) {
+    x
+  } else if (length(x) > 1) {
+    paste(paste(x[1:length(x)-1], collapse = ", "), "and", x[length(x)])
   }
 
 }
