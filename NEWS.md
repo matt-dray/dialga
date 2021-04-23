@@ -1,4 +1,4 @@
-# dialga 0.0.0.9003
+# dialga 0.1
 
 * Eliminated {knitr} dependency (#11)
 * Make `clip` argument `FALSE` by default in `r2cron()` (#12)

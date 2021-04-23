@@ -135,6 +135,7 @@ test_that("cron2eng() errors with bad input", {
   expect_error(cron2eng(1))
   expect_error(cron2eng("x"))
   expect_error(cron2eng("x x x x x"))
+  expect_error(cron2eng("60 * * * *"))
   expect_error(cron2eng("* * * *"))
   expect_error(cron2eng(TRUE))
   expect_error(cron2eng(mtcars))

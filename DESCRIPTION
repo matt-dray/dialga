@@ -1,6 +1,6 @@
 Package: dialga
 Title: Build and Interpret Cron Strings with R
-Version: 0.0.0.9003
+Version: 0.1
 Authors@R: 
     person(given = "Matt",
            family = "Dray",

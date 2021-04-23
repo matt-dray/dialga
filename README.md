@@ -30,8 +30,9 @@ strings detail concisely the required schedule. They require a specific
 format, like `"0/15 * 1,3,20 6 0,6"`, but it can be difficult to
 remember how to structure them.
 
-Under development. Just for fun. Bugs likely. Read more in [the
-accompanying blog post](https://www.rostrum.blog/2021/04/10/dialga/).
+Read more in [the accompanying blog
+post](https://www.rostrum.blog/2021/04/10/dialga/) and [report any
+bugs](https://github.com/matt-dray/dialga/issues) you might find.
 
 ## Install
 
@@ -42,6 +43,12 @@ install.packages("remotes")  # if not already installed
 remotes::install_github("matt-dray/dialga")
 library(dialga)
 ```
+
+If you want to be able to have the cron string output copied directly to
+your clipboard, you’ll need to install [the {clipr}
+package](https://cran.r-project.org/package=clipr) to your machine with
+`install.packages("clipr")` as well. You don’t have to install it if you
+don’t want to.
 
 ## Demonstration
 
@@ -66,8 +73,11 @@ x
 #> [1] "28 23 * * *"
 ```
 
-Note that you can use the argument `clip = TRUE` to copy the output to
-your clipboard so you can paste it elsewhere.
+Note that you can use the argument `clip = TRUE` to have the output
+copied to your system’s clipboard so you can paste it elsewhere. You
+must install [the {clipr}
+package](https://cran.r-project.org/package=clipr) separately if you
+want this functionality.
 
 To interpret the output—and confirm we got what we expected—we can pass
 that cron string into `cron2eng()`.

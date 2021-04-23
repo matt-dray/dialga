@@ -11,7 +11,8 @@
 #' @param months Month number, integers 1 to 12 inclusive.
 #' @param days_week Day of the week, integers 1 to 7 inclusive (where Sunday is
 #'     the first day of the week).
-#' @param clip Logical. Copy output to clipboard?
+#' @param clip Logical. Copy output to clipboard? Windows, macOS and X11 only.
+#'     Requires installation of the {clipr} package.
 #'
 #' @details The time-period arguments default to every unit within that time
 #'     period, like 'every minute, of every hour, of every day of the month,
@@ -99,12 +100,35 @@ r2cron <- function(minutes = 0L:59L, hours  = 0L:23L,
 #' equivalent sentence in English. Can take the output from \code{\link{r2cron}}
 #' for example. (Under development.)
 #'
-#' @param cron Character. A valid cron string, i.e. one cron expression for each
-#'     of the five time period slots (minutes, hours, days of the month, months,
-#'     days of the week), separated by spaces.
+#' @param cron Character. A valid cron expression, i.e. a string with five
+#'     time period 'slots' (minutes, hours, days of the month, months, days of
+#'     the week), separated by spaces. See details for more information.
 #'
-#' @return Character. An English sentence interpretation of the input cron
-#'     expression.
+#' @details The cron string slots and their valid ranges are:
+#' \itemize{
+#'   \item Slot 1: minutes past the hour, integers 0 to 59 inclusive.
+#'   \item Slot 2: hours on a 24-hour clock, integers 0 to 23 inclusive.
+#'   \item Slot 3: day number of the month, integers 1 to 31 inclusive.
+#'   \item Slot 4: month number, integers 1 to 12 inclusive.
+#'   \item Slot 5: day of the week, integers 0 to 6 inclusive (where Sunday is
+#'     the first day of the week).
+#' }
+#'
+#' In addition, the following input formats are acceptable to all the time
+#' slots:
+#' \itemize{
+#'   \item a single integer value, like \code{1}
+#'   \item consecutive-integer vectors, like \code{1:3}
+#'   \item nonconsecutive, irregularly-spaced integer vectors, like
+#'       \code{c(2, 3, 5)}
+#'   \item regularly-spaced integer sequences with specified start and end
+#'       values, like \code{seq(3, 59, 15)} (useful for specifying
+#'       sequences within the full time period,'every 15 minutes of the
+#'       hour starting from minute 3', like in this example)
+#' }
+#'
+#' @return Result printed to console. An English sentence interpretation of the
+#'     cron string that was the input.
 #' @export
 #'
 #' @examples \dontrun{
@@ -113,15 +137,21 @@ r2cron <- function(minutes = 0L:59L, hours  = 0L:23L,
 cron2eng <- function(cron = "* * * * *") {
 
   if (!is.character(cron)) {
-    stop("Argument 'cron' must be a valid chaacter-class cron expression.")
+    stop("Argument 'cron' must be a valid character-class cron expression.")
   }
 
   if (length(strsplit(cron, " ")[[1]]) != 5) {
     stop("Argument 'cron' must be a valid cron expression.")
   }
 
-  if (!all(grepl("\\*|\\d|\\s|,|/|-", strsplit(cron, "")[[1]]))) {
-    stop("Argument 'cron' must be a valid cron expression.")
+  if (length(strsplit(cron, " ")[[1]]) != 5 |  # 5 time slots
+      !all(grepl("\\d|\\*|\\s|,|/|-", strsplit(cron, "")[[1]])) |  # valid chars
+      !all(grepl("\\b[0-9]\\b|\\b[1-5][0-9]\\b|\\*",
+                 strsplit(cron, "\\s|,|/|-")[[1]])) ) {  # valid number range
+    stop(
+      "Argument 'cron' must have five 'time slots' separated by spaces.\n",
+      "Slots must contain valid integers or '*', '/', '-' and ',."
+    )
   }
 
   # Split each time period to a list element
