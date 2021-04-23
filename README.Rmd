@@ -60,25 +60,28 @@ A simple example of `r2cron()`: how would you specify the 28th minute past 11PM 
 ```{r r2cron-simple}
 x <- dialga::r2cron(
   minutes = 28, 
-  hours = 23,  # 24-hour clock
-  clip = FALSE
+  hours = 23  # 24-hour clock
 )
 
 x
 ```
 
-To confirm, we can pass that cron string into `cron2eng()`. The output isn't sophisticated, but it communicates the point.
+Note that you can use the argument `clip = TRUE` to copy the output to your clipboard so you can paste it elsewhere.
+
+To interpret the output---and confirm we got what we expected---we can pass that cron string into `cron2eng()`.
 
 ```{r cron2eng-simple}
 dialga::cron2eng(x)
 ```
 
-You could pipe these functions together to go from R to English.
+The output isn't sophisticated, but it communicates the point.
+
+You could even pipe these functions together to go from R to English.
 
 ```{r simple-pipe, message=FALSE}
 library(magrittr)  # for %>%
 
-dialga::r2cron(minutes = 28, hours = 23, clip = FALSE) %>% 
+dialga::r2cron(minutes = 28, hours = 23) %>% 
   dialga::cron2eng()
 ```
 
@@ -92,8 +95,7 @@ y <- dialga::r2cron(
  hours = 15:17,  # 24-hr clock
  days_month = 1,
  months = c(4, 10, 11),
- days_week = c(1, 7),  # Sunday is '1'
- clip = FALSE
+ days_week = c(1, 7)  # Sunday is '1'
 )
 
 y
@@ -110,7 +112,7 @@ dialga::cron2eng(y)
 As a courtesy, you'll be warned when unlikely dates arise:
 
 ```{r}
-dialga::r2cron(days_month = 28:31, months = 2, clip = FALSE)
+dialga::r2cron(days_month = 28:31, months = 2)
 ```
 
 ## Actual scheduling tools

@@ -10,7 +10,7 @@ r2cron(
   days_month = 1L:31L,
   months = 1L:12L,
   days_week = 1L:7L,
-  clip = TRUE
+  clip = FALSE
 )
 }
 \arguments{

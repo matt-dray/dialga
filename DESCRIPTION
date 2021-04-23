@@ -19,10 +19,10 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
-    clipr,
     stringr,
     tools
 Suggests: 
-    testthat (>= 3.0.0),
-    covr
+    clipr,
+    covr,
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3

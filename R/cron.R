@@ -44,7 +44,7 @@
 #'
 r2cron <- function(minutes = 0L:59L, hours  = 0L:23L,
                    days_month  = 1L:31L, months = 1L:12L, days_week  = 1L:7L,
-                   clip = TRUE) {
+                   clip = FALSE) {
 
  # Stop if input is out of range of time period
  .stop(minutes, "minutes")

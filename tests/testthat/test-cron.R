@@ -121,7 +121,6 @@ test_that("r2cron() clipboard-copying is supported", {
 
   msg <- "Copied to clipboard"
   skip_on_os("linux")  # R CMD check fails on Ubuntu because {clipr}
-  expect_output(r2cron(), msg)
   expect_output(r2cron(clip = TRUE), msg)
   expect_output(r2cron(minutes = 1, clip = TRUE), msg)
 
