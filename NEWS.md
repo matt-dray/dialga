@@ -5,6 +5,7 @@
 * Eliminated {stringr} dependency (#11)
 * Add 'and' to specified day of week for clarity
 * Eliminated {stringr} dependency (#11)
+* Fixed bug where sequences for hours and days-week failed to produce output
 
 # dialga 0.0.0.9002
 

@@ -68,6 +68,7 @@ x <- dialga::r2cron(
   minutes = 28, 
   hours = 23  # 24-hour clock
 )
+#> Copied to clipboard
 
 x
 #> [1] "28 23 * * *"
@@ -89,7 +90,7 @@ dialga::cron2eng(x)
 #>   - hour(s) 11PM
 #>   - every day(s) of the month
 #>   - every month(s)
-#>   - any day(s) of the week
+#>   - every day(s) of the week
 ```
 
 The output isn’t sophisticated, but it communicates the point.
@@ -101,12 +102,13 @@ library(magrittr)  # for %>%
 
 dialga::r2cron(minutes = 28, hours = 23) %>% 
   dialga::cron2eng()
+#> Copied to clipboard
 #> Cron string '28 23 * * *' means:
 #>   - minute(s) 28
 #>   - hour(s) 11PM
 #>   - every day(s) of the month
 #>   - every month(s)
-#>   - any day(s) of the week
+#>   - every day(s) of the week
 ```
 
 ### Complex
@@ -123,6 +125,7 @@ y <- dialga::r2cron(
  months = c(4, 10, 11),
  days_week = c(1, 7)  # Sunday is '1'
 )
+#> Copied to clipboard
 
 y
 #> [1] "0/20 15-17 1 4,10,11 0,6"
@@ -136,8 +139,8 @@ dialga::cron2eng(y)
 #>   - every 20 minute(s) starting from minute(s) 0
 #>   - hour(s) 3PM to 5PM
 #>   - day(s) of the month 1
-#>   - month(s) April, October and November
-#>   - and day(s) of the week Sunday and Saturday
+#>   - month(s) April, October, and November
+#>   - day(s) of the week Sunday and Saturday
 ```
 
 ### Warnings
@@ -152,6 +155,7 @@ dialga::r2cron(days_month = 28:31, months = 2)
 #>   Sure? There's no 30th in Feb.
 #> Warning in dialga::r2cron(days_month = 28:31, months = 2): 
 #>   Sure? 29 Feb is only in leap years.
+#> Copied to clipboard
 #> [1] "* * 28-31 2 *"
 ```
 
