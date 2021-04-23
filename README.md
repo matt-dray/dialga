@@ -79,7 +79,7 @@ dialga::cron2eng(x)
 #>   - hour(s) 11PM
 #>   - every day(s) of the month
 #>   - every month(s)
-#>   - every day(s) of the week
+#>   - any day(s) of the week
 ```
 
 The output isn’t sophisticated, but it communicates the point.
@@ -96,7 +96,7 @@ dialga::r2cron(minutes = 28, hours = 23) %>%
 #>   - hour(s) 11PM
 #>   - every day(s) of the month
 #>   - every month(s)
-#>   - every day(s) of the week
+#>   - any day(s) of the week
 ```
 
 ### Complex
@@ -127,7 +127,7 @@ dialga::cron2eng(y)
 #>   - hour(s) 3PM to 5PM
 #>   - day(s) of the month 1
 #>   - month(s) April, October and November
-#>   - day(s) of the week Sunday and Saturday
+#>   - and day(s) of the week Sunday and Saturday
 ```
 
 ### Warnings
