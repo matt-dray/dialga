@@ -1,3 +1,7 @@
+# dialga 0.1.1
+
+* Refactor `cron2eng()` translation of hours, months, day of week containing `/` (#7)
+
 # dialga 0.1
 
 * Eliminated {knitr} dependency (#11)

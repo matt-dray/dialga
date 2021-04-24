@@ -163,37 +163,31 @@ cron2eng <- function(cron = "* * * * *") {
     "month(s)", "day(s) of the week"
   )
 
-  if (grepl("\\d", p_list[[2]])) {
+  if (grepl("\\d", p_list[[2]])) {  # if minutes slot contains a number
 
-    if (grepl("/", p_list[[2]])) {
+    if (grepl("/", p_list[[2]])) {  # if minutes slot contains a slash
 
-      p_list[[2]] <- gsub("^0(?=/)",  "12AM", p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^1(?=/)",  "1AM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^2(?=/)",  "2AM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^3(?=/)",  "3AM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^4(?=/)",  "4AM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^5(?=/)",  "5AM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^6(?=/)",  "6AM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^7(?=/)",  "7AM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^8(?=/)",  "8AM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^9(?=/)",  "9AM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^10(?=/)", "10AM", p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^11(?=/)", "11AM", p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^12(?=/)", "12PM", p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^13(?=/)", "1PM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^14(?=/)", "2PM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^15(?=/)", "3PM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^16(?=/)", "4PM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^17(?=/)", "5PM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^18(?=/)", "6PM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^19(?=/)", "7PM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^20(?=/)", "8PM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^21(?=/)", "9PM",  p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^22(?=/)", "10PM", p_list[[2]], perl = TRUE)
-      p_list[[2]] <- gsub("^23(?=/)", "11PM", p_list[[2]], perl = TRUE)
+      # Extract value "x" (start hour) from "x/y"
+      slot_val <- as.numeric(strsplit(p_list[[2]], "/")[[1]][1])
+
+      # Replace "x" with corresponding time string (hour)
+      if (slot_val == 0) {
+        replacement <- "12AM"
+      } else if (slot_val >= 1 & slot_val <= 11) {
+        replacement <- paste0(slot_val, "AM")
+      } else if (slot_val == 12) {
+        replacement <- "12PM"
+      } else if (slot_val >= 13 & slot_val <= 23) {
+        replacement <- paste0(slot_val - 12, "PM")
+      }
+
+      # Replace the "x" in "x/y" with time string (hour)
+      p_list[[2]] <-
+        gsub("^\\d{1,2}(?=/)", replacement, p_list[[2]], perl = TRUE)
 
     } else {
 
+      # Find/replace any hours in the form "x", "x,y,z", "x-y"
       p_list[[2]] <- gsub("\\b0\\b",  "12AM", p_list[[2]])
       p_list[[2]] <- gsub("\\b1\\b",  "1AM",  p_list[[2]])
       p_list[[2]] <- gsub("\\b2\\b",  "2AM",  p_list[[2]])
@@ -223,25 +217,23 @@ cron2eng <- function(cron = "* * * * *") {
 
   }
 
-  if (grepl("\\d", p_list[[4]])) {
+  if (grepl("\\d", p_list[[4]])) {  # if months slot contains a number
 
-    if (grepl("/", p_list[[4]])) {
+    if (grepl("/", p_list[[4]])) {  # if months slot contains a slash
 
-      p_list[[4]] <- gsub("^1(?=/)",  "January",   p_list[[4]], perl = TRUE)
-      p_list[[4]] <- gsub("^2(?=/)",  "February",  p_list[[4]], perl = TRUE)
-      p_list[[4]] <- gsub("^3(?=/)",  "March",     p_list[[4]], perl = TRUE)
-      p_list[[4]] <- gsub("^4(?=/)",  "April",     p_list[[4]], perl = TRUE)
-      p_list[[4]] <- gsub("^5(?=/)",  "May",       p_list[[4]], perl = TRUE)
-      p_list[[4]] <- gsub("^6(?=/)",  "June",      p_list[[4]], perl = TRUE)
-      p_list[[4]] <- gsub("^7(?=/)",  "July",      p_list[[4]], perl = TRUE)
-      p_list[[4]] <- gsub("^8(?=/)",  "August",    p_list[[4]], perl = TRUE)
-      p_list[[4]] <- gsub("^9(?=/)",  "September", p_list[[4]], perl = TRUE)
-      p_list[[4]] <- gsub("^10(?=/)", "October",   p_list[[4]], perl = TRUE)
-      p_list[[4]] <- gsub("^11(?=/)", "November",  p_list[[4]], perl = TRUE)
-      p_list[[4]] <- gsub("^12(?=/)", "December",  p_list[[4]], perl = TRUE)
+      # Extract value "x" (start month) from "x/y"
+      slot_val <- as.numeric(strsplit(p_list[[4]], "/")[[1]][1])
+
+      # Replace "x" with corresponding time string (month)
+      replacement <- month.name[slot_val]
+
+      # Replace the "x" in "x/y" with time string (month)
+      p_list[[4]] <-
+        gsub("^\\d{1,2}(?=/)", replacement, p_list[[4]], perl = TRUE)
 
     } else {
 
+      # Find/replace any months in the form "x", "x,y,z", "x-y"
       p_list[[4]] <- gsub("\\b1\\b",  "January",   p_list[[4]])
       p_list[[4]] <- gsub("\\b2\\b",  "February",  p_list[[4]])
       p_list[[4]] <- gsub("\\b3\\b",  "March",     p_list[[4]])
@@ -263,16 +255,20 @@ cron2eng <- function(cron = "* * * * *") {
 
     if (grepl("/", p_list[[5]])) {
 
-      p_list[[5]] <- gsub("0(?=/)", "Sunday",    p_list[[5]], perl = TRUE)
-      p_list[[5]] <- gsub("1(?=/)", "Monday",    p_list[[5]], perl = TRUE)
-      p_list[[5]] <- gsub("2(?=/)", "Tuesday",   p_list[[5]], perl = TRUE)
-      p_list[[5]] <- gsub("3(?=/)", "Wednesday", p_list[[5]], perl = TRUE)
-      p_list[[5]] <- gsub("4(?=/)", "Thursday",  p_list[[5]], perl = TRUE)
-      p_list[[5]] <- gsub("5(?=/)", "Friday",    p_list[[5]], perl = TRUE)
-      p_list[[5]] <- gsub("6(?=/)", "Saturday",  p_list[[5]], perl = TRUE)
+      # Extract value "x" (start hour) from "x/y"
+      slot_val <- as.numeric(strsplit(p_list[[5]], "/")[[1]][1]) + 1
+
+      # Replace "x" with corresponding time string (day of week)
+      replacement <- c("Sunday", "Monday", "Tuesday", "Wednesday",
+                       "Thursday", "Friday", "Saturday")[slot_val]
+
+      # Replace the "x" in "x/y" with time string (day of week)
+      p_list[[5]] <-
+        gsub("\\d{1,2}(?=/)", replacement, p_list[[5]], perl = TRUE)
 
     } else {
 
+      # Find/replace any days-of-week in the form "x", "x,y,z", "x-y"
       p_list[[5]] <- gsub("0", "Sunday",    p_list[[5]])
       p_list[[5]] <- gsub("1", "Monday",    p_list[[5]])
       p_list[[5]] <- gsub("2", "Tuesday",   p_list[[5]])
@@ -285,12 +281,12 @@ cron2eng <- function(cron = "* * * * *") {
 
   }
 
-  # Convert each time period's cron expression to English
+  # Convert each time slot's cron expression to English
   for (p in names(p_list)) {
 
     if (p_list[[p]] == "*") {
 
-      # Every valid unit of the time period
+      # Every valid unit of the time slot
       if (p == names(p_list)[5]) {
         p_list[[p]] <- paste("any", p)  # more specific for day of week
       } else {
